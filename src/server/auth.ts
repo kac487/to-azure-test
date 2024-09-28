@@ -5,7 +5,7 @@ import {
   type NextAuthOptions,
 } from "next-auth";
 import { type Adapter } from "next-auth/adapters";
-import DiscordProvider from "next-auth/providers/discord";
+import Credentials from "next-auth/providers/credentials";
 
 import { env } from "~/env";
 import { db } from "~/server/db";
@@ -31,6 +31,7 @@ declare module "next-auth" {
   // }
 }
 
+
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
  *
@@ -48,9 +49,21 @@ export const authOptions: NextAuthOptions = {
   },
   adapter: PrismaAdapter(db) as Adapter,
   providers: [
-    DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
+    // DiscordProvider({
+    //   clientId: env.DISCORD_CLIENT_ID,
+    //   clientSecret: env.DISCORD_CLIENT_SECRET,
+    // }),
+    Credentials({
+      credentials: {
+        username: { label: "Username" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(creds, req) {
+        const response = await fetch(req as Request)
+        if (!response.ok) return null
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return (await response.json()) ?? null
+      },
     }),
     /**
      * ...add more providers here.

@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  # Barricade Next Application ------------------------------------------------
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: to-azure-test:latest
+    container_name: to-azure-test
+    network_mode: "host"
+    env_file:
+      - .env
+    # environment:  
+      # KEYCLOAK_CLIENT_SECRET: "1SyMHrqxk9zFdENm2d8z3vZ0FYIvS40j"
+      # KEYCLOAK_ISSUER: "http://kac487-pc:8083/realms/next"
+      # KEYCLOAK_WELL_KNOWN: "http://kac487-pc:8083/realms/next/.well-known/openid-configuration"
+    # ports:
+    #   - "3002:3000"
+    # restart: on-failure:0
+
+# Volumes ---------------------------------------------------------------------
+volumes:
+  postgres_data:
